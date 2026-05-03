@@ -1,0 +1,14 @@
+2026-05-01T08:00:00Z INFO auth-service: user alice logged in
+2026-05-01T08:01:15Z DEBUG auth-service: token validated for alice
+2026-05-01T08:02:30Z INFO api-gateway: GET /api/orders 200
+2026-05-01T08:03:45Z WARN payment-service: retry attempt 1 for order #4821
+2026-05-01T08:04:00Z ERROR payment-service: charge failed for order #4821 - card declined
+2026-05-01T08:05:10Z INFO payment-service: order #4821 marked as failed
+2026-05-01T08:06:22Z INFO auth-service: user bob logged in
+this line is malformed and should be captured as a parse error
+2026-05-01T08:07:45Z DEBUG api-gateway: cache miss for /api/products
+2026-05-01T08:08:00Z INFO api-gateway: GET /api/products 200
+BADLEVEL 2026-05-01T08:09:00Z api-gateway: another malformed line
+2026-05-01T08:10:30Z WARN inventory-service: stock low for SKU-7734 (3 remaining)
+2026-05-01T08:11:00Z ERROR inventory-service: failed to sync with warehouse DB
+2026-05-01T08:12:15Z INFO auth-service: user alice logged out
