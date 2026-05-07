@@ -1,8 +1,15 @@
 package min_stack
 
-// MinStack supports push, pop, top, and getMin all in O(1).
+// MinStack is a stack that, in addition to the usual push/pop/top operations,
+// can tell you the current minimum value in O(1) — no scanning the whole stack.
+//
+// The trick: every time you push a value, also remember what the minimum was
+// at that moment. When you pop, that saved minimum comes back automatically.
+// Think of it as each slot in the stack carrying two pieces of information:
+// the value you pushed, and "what was the smallest thing in the stack right then."
 type MinStack struct {
-	// TODO: define fields (e.g., two stacks or stack of (val, min) pairs)
+	vals []int
+	mins []int
 }
 
 func NewMinStack() *MinStack {
@@ -10,19 +17,23 @@ func NewMinStack() *MinStack {
 }
 
 func (s *MinStack) Push(val int) {
-	// TODO: implement
+	s.vals = append(s.vals, val)
+	if len(s.mins) == 0 || val < s.mins[len(s.mins)-1] {
+		s.mins = append(s.mins, val)
+	} else {
+		s.mins = append(s.mins, s.mins[len(s.mins)-1])
+	}
 }
 
 func (s *MinStack) Pop() {
-	// TODO: implement
+	s.vals = s.vals[:len(s.vals)-1]
+	s.mins = s.mins[:len(s.mins)-1]
 }
 
 func (s *MinStack) Top() int {
-	// TODO: implement
-	return 0
+	return s.vals[len(s.vals)-1]
 }
 
 func (s *MinStack) GetMin() int {
-	// TODO: implement
-	return 0
+	return s.mins[len(s.mins)-1]
 }
