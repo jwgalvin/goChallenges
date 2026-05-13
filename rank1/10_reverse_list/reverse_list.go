@@ -8,8 +8,17 @@ type Node struct {
 
 // ReverseList reverses a singly-linked list and returns the new head.
 func ReverseList(head *Node) *Node {
-	// TODO: implement
-	return nil
+	var prev *Node
+	current := head
+
+	for current != nil {
+		next := current.Next
+		current.Next = prev
+		prev = current
+		current = next
+	}
+	
+	return prev
 }
 
 // helper: build list from slice

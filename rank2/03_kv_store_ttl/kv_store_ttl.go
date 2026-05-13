@@ -1,31 +1,62 @@
 package kv_store_ttl
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 // KVStore is a simple in-memory key-value store with optional per-key TTL.
+type entry struct {
+	value     string
+	expiresAt time.Time
+}
+
 type KVStore struct {
-	// TODO: add fields
+	mu   sync.RWMutex
+	data map[string]entry
 }
 
 // NewKVStore returns an empty store.
 func NewKVStore() *KVStore {
-	// TODO: implement
-	return &KVStore{}
+	return &KVStore{data: make(map[string]entry)}
 }
 
 // Set stores key with value. If ttl > 0 the entry expires after that duration.
 // If ttl == 0 the entry never expires. Overwriting a key resets its expiry.
 func (s *KVStore) Set(key, value string, ttl time.Duration) {
-	// TODO: implement
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	var expiresAt time.Time
+
+	if ttl > 0 {
+		expiresAt = time.Now().Add(ttl)
+	}
+
+	s.data[key] = entry{
+		value:     value,
+		expiresAt: expiresAt,
+	}
 }
 
 // Get returns the value and true if key exists and has not expired.
 func (s *KVStore) Get(key string) (string, bool) {
-	// TODO: implement
-	return "", false
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	e, ok := s.data[key]
+	if !ok {
+		return "", false
+	}
+	if !e.expiresAt.IsZero() && time.Now().After(e.expiresAt) {
+		return "", false
+	}
+
+	return e.value, true
 }
 
 // Delete removes key immediately regardless of TTL.
 func (s *KVStore) Delete(key string) {
-	// TODO: implement
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.data, key)
 }
